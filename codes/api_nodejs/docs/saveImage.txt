@@ -1,0 +1,25 @@
+To save image
+
+use the function imageUploadFunction in ./utils/functions/uploadImage.js
+ with three parameters : 
+ *-req and res are your req, res parameters that you use with express framework or http 
+ (app('*',(req,res)))
+    - req : the http request 
+    -res : the http response 
+ *imageFolderName : your image folder name, is the sub-folder where your image will be save in public 
+    -(For user profil picture it will be save in ./src/public/profil_picture)
+
+ *After check the result that this function returned
+var imageSaveState = imageUploadFunction(req, res,'profil_picture');
+ imageSaveState.then(
+      (result) => {
+        if (result[0] == false) {
+            //All is ok
+        }else{
+            // Something went wrong when trying to save image :  Get the error message to return to user
+          logger.error(JSON.stringify(result)); //you save the log massage in your log file
+          res.status(500).send("Error" + JSON.stringify(result)); //Return error to user
+        }
+ ).catch((e){
+        res.status(500).send("Error" + JSON.stringify(e));
+ })

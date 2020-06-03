@@ -1,0 +1,43 @@
+{
+    "bd": {
+        "dialect": "mariadb",
+        "host": "localhost",
+        "username": "root",
+        "password": "",
+        "databaseName": "api",
+        "debug": true
+    },
+    "options": {
+        "pool": {
+            "max": 5,
+            "min": 0,
+            "acquire": 30000,
+            "idle": 10000
+        }
+    },
+    "mariadb": {
+        "dialect": "mariadb",
+        "host": "localhost",
+        "username": "root",
+        "password": "",
+        "databaseName": "api",
+        "debug": true
+    },
+    "mysql": {
+        "dialect": "mysql",
+        "host": "localhost",
+        "username": "root",
+        "password": "",
+        "databaseName": "api",
+        "debug": true
+
+    },
+    "mongodb": {
+        "uri": "mongodb+srv://toure5013:Kassim225_pere@healthappapi-eclon.mongodb.net/test?retryWrites=true&w=majority"
+    },
+    "postgree": {
+
+
+    }
+
+}

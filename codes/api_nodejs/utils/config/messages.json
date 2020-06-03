@@ -1,0 +1,36 @@
+{   "_comment" :  "./utils/config/messages.json",
+    "message" : {
+        "warning" : {
+            "delete" : "Attention vous allez supprimer",
+            "insert" : "Attension vous allez insérer"
+        },
+        "error":{
+            "data_not_correct" : "données entrées incorect, veuill entrer une valeur correct!",
+            "max_error" : "nombre maximum entrer invalide, veuillez réessayer!",
+            "already_exist" : "Dejà pris",
+            "blank" : "Veuillez rempir tout les champs !",
+            "same_value" : "Vous avez entrer la même valeur que la valeur dejà existant!",
+            "file_upload_error" : "Erreur lors de l'enregistrement du fichier",
+            "username_invalid" : "username ou pseudo pas valide",
+            "invalid_email" : "Email_invalid",
+            "invalid_password" : "Mot de pass invalide",
+            "invalid_username" : "Nom d'utilisateur ou pseudo invalid",
+            "invalid_token" : "Le token envoyé n'est pas valide",
+            "missing_token" : "Entrez un token valide",
+            "login_failed" : "connection echoué",
+            "different_password": "Les deux mots de passes ne correspondent pas",
+            "file_unsave" :  "Fichier non enregistrer, veuillez rentrer un fichier correct",
+            "not_login" : "Vous n'êtes pas connecter",
+            "user_not_found" : "l'utilisateur avec ce identitifiant n'existe pas",
+            "data_not_set" : "Donner non réçus"
+
+          },
+          "success" : {
+              "update" : "Donner mise à jour avec succès",
+              "login" : "Connecter avec succès",
+              "save" : "Données enregistrés avec succès",
+              "delete" : "Donner suprimer avec succès",
+              "correct": "Tout est correct"
+          }
+    }
+}

@@ -1,0 +1,5 @@
+{
+    "401" : "Auth failed",
+    "403" : "Forbidden"
+
+}

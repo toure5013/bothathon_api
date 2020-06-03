@@ -1,0 +1,17 @@
+{
+    "base_url": "/api/v1",
+    "hostname"  : "localhost",
+    "port" : 8080,
+    "token_valid_time" : 72000,
+    "tokenkey" : "$sjkj&ed68daan$5445q7azgzvs5ds&&",
+    "appEndpoint": "http://localhost:8080",
+    "apiEndpoint": "http://localhost:8080",
+    "permissionLevels": {
+      "NORMAL_USER": 1,
+      "PAID_USER": 4,
+      "ADMIN": 2048
+    },
+    "public_file" : "./src/public",
+    "public_path_image_profil" : "./src/public/profil_picture"
+}
+  
