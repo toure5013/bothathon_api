@@ -24,8 +24,10 @@ exports.checkUserByEmail = async function(email) {
         .then(
             user => {
                 console.log("--------------je verfie email")
+                console.log(user);
+                if (user == false) {
 
-                if (user) {
+                } else {
                     //email already-taken
                     emailExist = true;
                 }

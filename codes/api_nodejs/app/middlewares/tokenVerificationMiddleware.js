@@ -12,7 +12,7 @@ let checkToken = (req, res, next) => {
     logger.info(JSON.stringify(req.headers));
 
     //get token from headers (express headers are auto converted to lowercase)
-    let token = req.headers["x-access-token"] || req.headers["authorization"];
+    let token = req.headers["x-access-token"] || req.headers["authorization"] || req.headers["Authorization"];
     try {
         if (token.startsWith("Bearer")) {
             //Remove Bearer
@@ -33,7 +33,9 @@ let checkToken = (req, res, next) => {
     if (token) {
         const secret = config.tokenkey;
         tokenDbRequest.findOneToken(token).then(result => {
-            if (result) {
+            console.log(result);
+            console.log("tok tok tok to,")
+            if (result.length !== 0) {
                 return res.json({
                     error: true,
                     success: false,
@@ -42,6 +44,7 @@ let checkToken = (req, res, next) => {
                 });
             } else {
                 jwt.verify(token, secret, (err, decoded) => {
+                    console.log(decoded)
                     if (err) {
                         return res.json({
                             error: true,

@@ -18,6 +18,7 @@ const date = new Date();
 
 //function generate id
 var length = 10;
+const saltRounds = 10;
 
 function generateID(length) {
     var result = '';
@@ -36,89 +37,113 @@ function generateID(length) {
 exports.addOneUser = async(req, res, next) => {
     const data = req.body;
     console.log(data);
-    // user all info
-    const firstname = data.firstname.trim();
-    const lastname = data.lastname.trim();
-    const email = data.email.trim();
-    const password = data.password.trim();
-    const passwordConfirm = data.passwordConfirm.trim();
+    if (req.body) {
+        if (data.firstname != "" && data.lastname != "" && data.email != "" && data.password != "" && data.passwordConfirm) {
+            // user all info
+            const firstname = data.firstname.trim();
+            const lastname = data.lastname.trim();
+            const email = data.email.trim();
+            const password = data.password.trim();
+            const passwordConfirm = data.passwordConfirm.trim();
 
-    // verifyData : we use function to check if all of user data sent by user are OK
-    const dataVerificationReturn = await verifyData.verifyUserData(
-        req,
-        res,
-        firstname,
-        lastname,
-        email,
-        password,
-        passwordConfirm
-    );
+            // verifyData : we use function to check if all of user data sent by user are OK
+            const dataVerificationReturn = await verifyData.verifyUserData(
+                req,
+                res,
+                firstname,
+                lastname,
+                email,
+                password,
+                passwordConfirm
+            );
 
-    // A dataVerificationReturn: if all we verify the image using imageUploadFunction();
+            // A dataVerificationReturn: if all we verify the image using imageUploadFunction();
 
-    if (dataVerificationReturn[0] == false) {
-        //We check if username or email isn't already took
-        const emailCheckReturn = checkUserByUsernameAndEmail.checkUserByEmail(
-            email
-        );
-        emailCheckReturn
-            .then(emailExistReturn => {
-                console.log(emailExistReturn);
-                if (!emailExistReturn) {
+            if (dataVerificationReturn[0] == false) {
+                //We check if username or email isn't already took
+                const emailCheckReturn = checkUserByUsernameAndEmail.checkUserByEmail(
+                    email
+                );
+                console.log(emailCheckReturn) + "------------------ email check return";
+                emailCheckReturn
+                    .then(emailExistReturn => {
+                        console.log(emailExistReturn + "-------------------");
+                        if (!emailExistReturn) {
+                            //GENERATE ID HERE 
+                            var ID = generateID(length);
+                            const salt = bcrypt.genSaltSync(saltRounds);
+                            var passwordHashed = bcrypt.hashSync(password, salt);
 
-                    //GENERATE ID HERE 
-                    var ID = generateID(length);
-                    //email not taken
-                    //Save this data in database
-                    userDbRequest
-                        .insert(
-                            firstname,
-                            lastname,
-                            ID,
-                            email,
-                            passwordHashed,
-                        )
-                        .then(
-                            //if all is ok
-                            user => {
-                                console.log("User's generated ID:", ID);
-                                res.status(200).json({
-                                    status: 200,
-                                    message: message.success.save,
-                                    date: date,
+                            var returnSaveUser = userDbRequest.insert(
+                                firstname,
+                                lastname,
+                                ID,
+                                email,
+                                passwordHashed,
+                            );
+                            console.log(returnSaveUser);
+                            res.status(200).json({
+                                status: 200,
+                                message: message.success.save,
+                                date: date,
+                            });
+                            if (returnSaveUser) {
+                                if (returnSaveUser.success == true) {
+                                    res.status(200).json({
+                                        status: 200,
+                                        message: message.success.save,
+                                        date: date,
+                                    });
+                                } else {
+                                    //if err
+                                    res.status(500).json({
+                                        status: 500,
+                                        message: "Error, veuillez réessayez",
+                                    });
+                                }
+                            } else {
+                                res.status(500).json({
+                                    status: 500,
+                                    message: "Error, veuillez réessayez",
                                 });
                             }
-                        )
-                        .catch(e => {
-                            //if err
-                            res.status(500).json({
-                                status: 500,
-                                message: "Error :" + e,
+
+                        } else {
+                            res.status(400).json({
+                                status: 400,
+                                message: "Email already exist, please, try newone!",
                             });
+                        }
+                    }).catch((e) => {
+                        /*Something went wrong */
+                        console.log(e);
+                        res.status(400).json({
+                            status: 400,
+                            message: "something went wrong when verifying email,  retry!",
                         });
-                } else {
-                    /*User email exist */
-                    res.status(400).json({
-                        status: 400,
-                        message: "Email Already exist",
                     });
-                }
-            })
-            .catch(() => {
-                /*Something went wrong */
+            } else {
+                //end dataVerificationReturn
+                var error = dataVerificationReturn;
                 res.status(400).json({
                     status: 400,
-                    message: "Email Already exist",
+                    message: error,
                 });
+            }
+        } else {
+            res.status(400).json({
+                status: 400,
+                message: "Send conform data",
             });
+        }
     } else {
-        //end dataVerificationReturn
-        var error = dataVerificationReturn;
         res.status(400).json({
             status: 400,
-            message: error,
+            message: "Send conform data",
         });
     }
+
+
 }; //end addOneUser
 
 /*---------------------------------------------------------------------------
@@ -236,12 +261,12 @@ exports.updateOneUser = async(req, res, next) => {
             //We check if one of email or/and username are the same with new  email and username
             const sameEmail = user.email == email ? true : false;
 
-            console.log(sameEmail, sameUserName);
+            console.log(sameEmail);
 
             var emailOk = true;
 
             //We check if all is ok with email
-            if (emailCheckReturn) {
+            if (!emailCheckReturn) {
                 //email exit
                 if (sameEmail) {
                     /*the same email with the user email*/
@@ -258,42 +283,48 @@ exports.updateOneUser = async(req, res, next) => {
             }
 
             /*-------------------------------------------------
-                                  save in database
+                                  Update in database
                 --------------------------------------------------*/
             //Update the user by id from database
-            userDbRequest
+
+            var ID = generateID(length);
+            const salt = bcrypt.genSaltSync(saltRounds);
+            var passwordHashed = bcrypt.hashSync(password, salt);
+            var returnUpdateUser = userDbRequest
                 .update(
                     userId,
                     firstname,
                     lastname,
                     email,
                     passwordHashed,
-                )
-                .then(
-                    //if all is ok
-                    user => {
-                        logger.info(
-                            "User  id : " + userId + message.success.update
-                        );
-                        res.status(200).json({
-                            success: true,
-                            status: 200,
-                            user: user,
-                            new_data: {
-                                firstname,
-                                lastname,
-                                email,
-                                password,
-                            },
-                            message: message.success.update,
-                        });
-                    }
-                ).catch(e => {
-                    res.status(500).json({
-                        success: false,
-                        message: JSON.stringify(e)
+                );
+            console.log(returnUpdateUser);
+            res.status(200).json({
+                status: 200,
+                message: message.success.save,
+                date: date,
+            });
+            if (returnUpdateUser) {
+                if (returnUpdateUser.success == true) {
+                    res.status(200).json({
+                        status: 200,
+                        message: message.success.save,
+                        date: date,
                     });
+                } else {
+                    //if err
+                    res.status(500).json({
+                        status: 500,
+                        message: "Error, veuillez réessayez",
+                    });
+                }
+            } else {
+                res.status(500).json({
+                    status: 500,
+                    message: "Error, veuillez réessayez",
                 });
+            }
+
         }
     } else {
         var error = dataVerificationReturn;

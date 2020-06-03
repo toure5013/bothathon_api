@@ -31,7 +31,7 @@ exports.verifyUserData = (
         passwordConfirm != ''
     ) {
         // email
-        if (!email /* regexEmail */ ) {
+        if (email === "") {
             error = true
             return [
                 error,

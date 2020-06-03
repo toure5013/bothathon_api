@@ -1,7 +1,7 @@
 // Using Node.js `require()`
 const mongoose = require('mongoose');
-const { User } = require('../app/models/User'); //Users models
-const { Token } = require('../app/models/Token'); //Users models
+const UserSchema = require('../app/models/User').UserSchema; //Users models
+const TokenSchema = require('../app/models/Token').TokenSchema; //Token models
 const dbConfig = require('../utils/config/dbConfig.json').mongodb;
 const options = {
     useNewUrlParser: true,
@@ -34,12 +34,17 @@ db.once("open", function() {
 
 
 //user Model
-var UserModel = mongoose.model('User', User);
-var TokenModel = mongoose.model('Token', Token);
+var UserModel = mongoose.model('User', UserSchema);
+var TokenModel = mongoose.model('Token', TokenSchema);
 
+
+//Create collection
+// db.createCollection('User', User.UserValidator);
+// db.createCollection('Token', Token.TokenValidator);
 
 
 module.exports = {
+    db,
     mongoose,
     UserModel,
     TokenModel

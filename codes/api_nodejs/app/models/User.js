@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const User = new Schema({
+const UserSchema = new Schema({
     // attributes
     firstname: String,
     lastname: String,
@@ -19,6 +19,40 @@ const User = new Schema({
     updatedAt: { type: Date, default: Date.now }
 });
 
+
+const UserValidator = {
+    validator: {
+        jsonSchema: {
+            bsonType: 'object',
+            required: ['firstname', 'lastname', 'ID', 'email', 'password'],
+            properties: {
+                firstname: {
+                    bsonType: 'string'
+                },
+                lastname: {
+                    bsonType: 'string'
+                },
+                ID: {
+                    bsonType: 'string'
+                },
+                email: {
+                    bsonType: 'string'
+                },
+                updatedAt: {
+                    bsonType: 'string'
+                },
+                createdAt: {
+                    bsonType: 'string'
+                },
+                createdAt: {
+                    bsonType: 'string'
+                }
+            }
+        }
+    }
+}
+
 module.exports = {
-    User
+    UserSchema,
+    UserValidator
 }

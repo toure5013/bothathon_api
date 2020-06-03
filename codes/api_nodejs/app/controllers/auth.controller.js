@@ -18,9 +18,14 @@ exports.login = (req, res) => {
             .then(
                 // if all is ok
                 user => {
+
+                    console.info('-------------ici ici iciiciiciciicici---------------------')
+
+                    console.log(user);
+                    console.info('----------------------------------')
                     if (user) {
-                        const userPasswordFromDataBase = user.password
-                        console.log(userPasswordFromDataBase)
+                        const userPasswordFromDataBase = user[0].password
+                        console.log(userPasswordFromDataBase);
                         bcrypt.compare(
                             password,
                             userPasswordFromDataBase /* this is the password get from database */ ,

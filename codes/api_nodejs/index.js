@@ -60,15 +60,15 @@ const logger = require('./app/middlewares/logMiddleware').logMiddleware;
 //Root route
 app.get("/", (req, res) => {
 
-        var welcome = "----------------------------------------------------------<br>";
-        welcome += " -- Bienvenue sur api v1, ton baseUrl est " + baseUrl + "--<br>";
-        welcome += "----------------------------------------------------------<br>";
-        console.log("welcome")
-        res.status(200).send(welcome)
-    }),
+    var welcome = "----------------------------------------------------------<br>";
+    welcome += " -- Bienvenue sur api v1, ton baseUrl est " + baseUrl + "--<br>";
+    welcome += "----------------------------------------------------------<br>";
+    console.log("welcome")
+    res.status(200).send(welcome)
+});
 
-    //Other routes(user,...)
-    routes.configRoutes(baseUrl, app);
+//Other routes(user,...)
+routes.configRoutes(baseUrl, app);
 
 
 //undefined routes (404)
